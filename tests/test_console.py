@@ -69,7 +69,7 @@ class TestConsole(unittest.TestCase):
         with patch('sys.stdout', new=StringIO()) as f:
             self.assertTrue(HBNBCommand().onecmd("EOF"))
 
-    """==== Specific tests for the Create method ===="""
+    # ==== Specific tests for the Create method ====
 
     def test_create_without_Class(self):
         """ Test: create cmd with missing class name """
@@ -108,7 +108,7 @@ class TestConsole(unittest.TestCase):
             HBNBCommand().onecmd("create Place")
             self.assertTrue(f.getvalue().strip)
 
-    """==== Specific tests for the Show method ===="""
+    # ==== Specific tests for the Show method ====
 
     def test_show_without_classname(self):
         """ Test: outputs the erromessage without class"""
@@ -138,7 +138,7 @@ class TestConsole(unittest.TestCase):
             HBNBCommand().onecmd("show User 8747839280")
             self.assertEqual(f.getvalue().strip(), msg)
 
-    """==== Specific tests for the All method ===="""
+    # ==== Specific tests for the All method ====
 
     def test_all_no_args(self):
         """Test the all method with no args: class, id"""
@@ -195,7 +195,7 @@ class TestConsoleMethodsWithArgs(unittest.TestCase):
         except IOError:
             pass
 
-
+    # Tests for the all method
     def test_all_BaseModel(self):
         """Tests all BaseModel"""
         with patch('sys.stdout', new=StringIO()) as f:
@@ -267,6 +267,68 @@ class TestConsoleMethodsWithArgs(unittest.TestCase):
             self.assertIn("{}".format(self.place2), f.getvalue())
             self.assertNotIn("{}".format(self.user1), f.getvalue())
             self.assertNotEqual(self.place1, self.place2)
+
+    # Tests for the show method
+    def test_BaseModel_Show(self):
+        """Tests BaseModel.show()"""
+        with patch('sys.stdout', new=StringIO()) as f:
+            HBNBCommand().onecmd("BaseModel.show({})".format(self.base1.id))
+            self.assertIn("{}".format(self.base1), f.getvalue())
+            self.assertNotIn("{}".format(self.base2), f.getvalue())
+            self.assertNotIn("{}".format(self.user1), f.getvalue())
+
+    def test_User_Show(self):
+        """Tests User.show()"""
+        with patch('sys.stdout', new=StringIO()) as f:
+            HBNBCommand().onecmd("User.show({})".format(self.user1.id))
+            self.assertIn("{}".format(self.user1), f.getvalue())
+            self.assertNotIn("{}".format(self.user2), f.getvalue())
+            self.assertNotIn("{}".format(self.base1), f.getvalue())
+
+    def test_Review_Show(self):
+        """Tests Review.show()"""
+        with patch('sys.stdout', new=StringIO()) as f:
+            HBNBCommand().onecmd("Review.show({})".format(self.review1.id))
+            self.assertIn("{}".format(self.review1), f.getvalue())
+            self.assertNotIn("{}".format(self.review2), f.getvalue())
+            self.assertNotIn("{}".format(self.user1), f.getvalue())
+
+    def test_State_Show(self):
+        """Tests State.show()"""
+        with patch('sys.stdout', new=StringIO()) as f:
+            HBNBCommand().onecmd("State.show({})".format(self.state1.id))
+            self.assertIn("{}".format(self.state1), f.getvalue())
+            self.assertNotIn("{}".format(self.state2), f.getvalue())
+            self.assertNotIn("{}".format(self.user1), f.getvalue())
+
+    def test_City_Show(self):
+        """Tests City.show()"""
+        with patch('sys.stdout', new=StringIO()) as f:
+            HBNBCommand().onecmd("City.show({})".format(self.city1.id))
+            self.assertIn("{}".format(self.city1), f.getvalue())
+            self.assertNotIn("{}".format(self.city2), f.getvalue())
+            self.assertNotIn("{}".format(self.user1), f.getvalue())
+
+    def test_Amenity_Show(self):
+        """Tests Amenity.show()"""
+        with patch('sys.stdout', new=StringIO()) as f:
+            HBNBCommand().onecmd("Amenity.show({})".format(self.amenity1.id))
+            self.assertIn("{}".format(self.amenity1), f.getvalue())
+            self.assertNotIn("{}".format(self.amenity2), f.getvalue())
+            self.assertNotIn("{}".format(self.user1), f.getvalue())
+
+    def test_Place_Show(self):
+        """Tests Place.show()"""
+        with patch('sys.stdout', new=StringIO()) as f:
+            HBNBCommand().onecmd("Place.show({})".format(self.place1.id))
+            self.assertIn("{}".format(self.place1), f.getvalue())
+            self.assertNotIn("{}".format(self.place2), f.getvalue())
+            self.assertNotIn("{}".format(self.user1), f.getvalue())
+
+    # Tests for the count method
+    # Tests for the destroy method
+    # Tests for the update method
+
 
 if __name__ == "__main__":
     unittest.main()
