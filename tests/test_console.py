@@ -153,6 +153,36 @@ class TestConsole(unittest.TestCase):
             HBNBCommand().onecmd("all InvalidClass")
             self.assertEqual(f.getvalue().strip(), msg)
 
+    # ==== Specific tests for the Update method ====
+
+    def test_update_no_args(self):
+        """Test the update method with no args"""
+        msg = "** class name missing **"
+        with patch('sys.stdout', new=StringIO()) as f:
+            HBNBCommand().onecmd("update")
+            self.assertEqual(f.getvalue().strip(), msg)
+
+    def test_update_invalid_class(self):
+        """Test the update method with invalid class"""
+        msg = "** class doesn't exist **"
+        with patch('sys.stdout', new=StringIO()) as f:
+            HBNBCommand().onecmd("update InvalidClass")
+            self.assertEqual(f.getvalue().strip(), msg)
+
+    def test_update_no_id(self):
+        """Test the update method with no id"""
+        msg = "** instance id missing **"
+        with patch('sys.stdout', new=StringIO()) as f:
+            HBNBCommand().onecmd("update User")
+            self.assertEqual(f.getvalue().strip(), msg)
+
+    def test_update_invalid_id(self):
+        """Test the update method with invalid id"""
+        msg = "** no instance found **"
+        with patch('sys.stdout', new=StringIO()) as f:
+            HBNBCommand().onecmd("update User 8747839280")
+            self.assertEqual(f.getvalue().strip(), msg)
+
 
 class TestConsoleMethodsWithArgs(unittest.TestCase):
     """Test other console methods with arguments"""
@@ -326,6 +356,13 @@ class TestConsoleMethodsWithArgs(unittest.TestCase):
             self.assertNotIn("{}".format(self.user1), f.getvalue())
 
     # Tests for the count method
+    def test_count_with_invalid_classname(self):
+        """ Test: with an invalid class """
+        msg = "** class doesn't exist **"
+        with patch('sys.stdout', new=StringIO()) as f:
+            HBNBCommand().onecmd("MyClass.count()")
+            self.assertEqual(f.getvalue().strip(), msg)
+
     def test_BaseModel_Count(self):
         """Tests BaseModel.count()"""
         with patch('sys.stdout', new=StringIO()) as f:
@@ -368,8 +405,92 @@ class TestConsoleMethodsWithArgs(unittest.TestCase):
             HBNBCommand().onecmd("Place.count()")
             self.assertIn("2", f.getvalue())
 
-    # Tests for the destroy method
     # Tests for the update method
+    def test_update_no_attr(self):
+        """Test the update method with no attr"""
+        msg = "** attribute name missing **"
+        with patch('sys.stdout', new=StringIO()) as f:
+            HBNBCommand().onecmd("update User {}".format(self.user1.id))
+            self.assertEqual(f.getvalue().strip(), msg)
+
+    def test_update_no_value(self):
+        """Test the update method with no value"""
+        msg = "** value missing **"
+        with patch('sys.stdout', new=StringIO()) as f:
+            HBNBCommand().onecmd("update User {} name".format(self.user1.id))
+            self.assertEqual(f.getvalue().strip(), msg)
+
+    def test_BaseModel_Update(self):
+        """Tests BaseModel.update()"""
+        with patch('sys.stdout', new=StringIO()) as f:
+            HBNBCommand().onecmd("BaseModel.update({}, name, \"Cynthia\")"
+                                 .format(self.base1.id))
+            HBNBCommand().onecmd("BaseModel.show({})".format(self.base1.id))
+            self.assertIn("Cynthia", f.getvalue())
+            self.assertNotIn("Betty", f.getvalue())
+
+    def test_User_Update(self):
+        """Tests User.update()"""
+        with patch('sys.stdout', new=StringIO()) as f:
+            HBNBCommand().onecmd("User.update({}, last_name, \"Uche\")"
+                                 .format(self.user1.id))
+            HBNBCommand().onecmd("User.show({})".format(self.user1.id))
+            self.assertIn("Uche", f.getvalue())
+            self.assertIn("last_name", f.getvalue())
+            self.assertNotIn("Midler", f.getvalue())
+
+    def test_Review_Update(self):
+        """Tests Review.update()"""
+        with patch('sys.stdout', new=StringIO()) as f:
+            HBNBCommand().onecmd("Review.update({}, text, \"I love this place\")"
+                                 .format(self.review1.id))
+            HBNBCommand().onecmd("Review.show({})".format(self.review1.id))
+            self.assertIn("I love this place", f.getvalue())
+            self.assertIn("text", f.getvalue())
+            self.assertNotIn("I hate this place", f.getvalue())
+
+    def test_State_Update(self):
+        """Tests State.update()"""
+        with patch('sys.stdout', new=StringIO()) as f:
+            HBNBCommand().onecmd("State.update({}, name, \"Texas\")"
+                                 .format(self.state1.id))
+            HBNBCommand().onecmd("State.show({})".format(self.state1.id))
+            self.assertIn("Texas", f.getvalue())
+            self.assertIn("name", f.getvalue())
+            self.assertNotIn("California", f.getvalue())
+
+    def test_City_Update(self):
+        """Tests City.update()"""
+        with patch('sys.stdout', new=StringIO()) as f:
+            HBNBCommand().onecmd("City.update({}, name, \"San Francisco\")"
+                                 .format(self.city1.id))
+            HBNBCommand().onecmd("City.show({})".format(self.city1.id))
+            self.assertIn("San Francisco", f.getvalue())
+            self.assertIn("name", f.getvalue())
+            self.assertNotIn("San Jose", f.getvalue())
+
+    def test_Amenity_Update(self):
+        """Tests Amenity.update()"""
+        with patch('sys.stdout', new=StringIO()) as f:
+            HBNBCommand().onecmd("Amenity.update({}, name, \"Wifi\")"
+                                 .format(self.amenity1.id))
+            HBNBCommand().onecmd("Amenity.show({})".format(self.amenity1.id))
+            self.assertIn("Wifi", f.getvalue())
+            self.assertIn("name", f.getvalue())
+            self.assertNotIn("TV", f.getvalue())
+
+    def test_Place_Update(self):
+        """Tests Place.update()"""
+        with patch('sys.stdout', new=StringIO()) as f:
+            HBNBCommand().onecmd("Place.update({}, name, \"My House\")"
+                                 .format(self.place1.id))
+            HBNBCommand().onecmd("Place.show({})".format(self.place1.id))
+            self.assertIn("My House", f.getvalue())
+            self.assertIn("name", f.getvalue())
+            self.assertNotIn("My Apartment", f.getvalue())
+
+    # Tests for the update method with kwargs
+    # Tests for the destoy method
 
 
 if __name__ == "__main__":
