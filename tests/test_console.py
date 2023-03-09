@@ -69,6 +69,12 @@ class TestConsole(unittest.TestCase):
         with patch('sys.stdout', new=StringIO()) as f:
             self.assertTrue(HBNBCommand().onecmd("EOF"))
 
+    def test_default(self):
+        """ Test: handles unknown commands """
+        with patch('sys.stdout', new=StringIO()) as f:
+            HBNBCommand().onecmd("Print me!")
+            self.assertEqual(f.getvalue().strip(), "*** Unknown syntax: Print me!")
+
     # ==== Specific tests for the Create method ====
 
     def test_create_without_Class(self):
@@ -151,6 +157,36 @@ class TestConsole(unittest.TestCase):
         msg = "** class doesn't exist **"
         with patch('sys.stdout', new=StringIO()) as f:
             HBNBCommand().onecmd("all InvalidClass")
+            self.assertEqual(f.getvalue().strip(), msg)
+
+    # ==== Specific tests for the Destroy method ====
+
+    def test_destroy_no_args(self):
+        """Test the destroy method with no args"""
+        msg = "** class name missing **"
+        with patch('sys.stdout', new=StringIO()) as f:
+            HBNBCommand().onecmd("destroy")
+            self.assertEqual(f.getvalue().strip(), msg)
+
+    def test_destroy_invalid_class(self):
+        """Test the destroy method with invalid class"""
+        msg = "** class doesn't exist **"
+        with patch('sys.stdout', new=StringIO()) as f:
+            HBNBCommand().onecmd("destroy InvalidClass")
+            self.assertEqual(f.getvalue().strip(), msg)
+
+    def test_destroy_no_id(self):
+        """Test the destroy method with no id"""
+        msg = "** instance id missing **"
+        with patch('sys.stdout', new=StringIO()) as f:
+            HBNBCommand().onecmd("destroy User")
+            self.assertEqual(f.getvalue().strip(), msg)
+
+    def test_destroy_invalid_id(self):
+        """Test the destroy method with invalid id"""
+        msg = "** no instance found **"
+        with patch('sys.stdout', new=StringIO()) as f:
+            HBNBCommand().onecmd("destroy User 8747839280")
             self.assertEqual(f.getvalue().strip(), msg)
 
     # ==== Specific tests for the Update method ====
@@ -489,8 +525,63 @@ class TestConsoleMethodsWithArgs(unittest.TestCase):
             self.assertIn("name", f.getvalue())
             self.assertNotIn("My Apartment", f.getvalue())
 
-    # Tests for the update method with kwargs
-    # Tests for the destoy method
+    # Tests for the destroy method
+    # N.B:: The destroy method starts with a 'z' to ensure it runs last
+    def test_zBaseModel_Destroy(self):
+        """Tests BaseModel.destroy()"""
+        with patch('sys.stdout', new=StringIO()) as f:
+            HBNBCommand().onecmd("BaseModel.destroy({})".format(self.base1.id))
+            HBNBCommand().onecmd("BaseModel.destroy({})".format(self.base2.id))
+            HBNBCommand().onecmd("all")
+            self.assertNotIn("BaseModel", f.getvalue())
+
+    def test_zUser_Destroy(self):
+        """Tests User.destroy()"""
+        with patch('sys.stdout', new=StringIO()) as f:
+            HBNBCommand().onecmd("User.destroy({})".format(self.user1.id))
+            HBNBCommand().onecmd("User.destroy({})".format(self.user2.id))
+            HBNBCommand().onecmd("all")
+            self.assertNotIn("User", f.getvalue())
+
+    def test_zReview_Destroy(self):
+        """Tests Review.destroy()"""
+        with patch('sys.stdout', new=StringIO()) as f:
+            HBNBCommand().onecmd("Review.destroy({})".format(self.review1.id))
+            HBNBCommand().onecmd("Review.destroy({})".format(self.review2.id))
+            HBNBCommand().onecmd("all")
+            self.assertNotIn("Review", f.getvalue())
+
+    def test_zState_Destroy(self):
+        """Tests State.destroy()"""
+        with patch('sys.stdout', new=StringIO()) as f:
+            HBNBCommand().onecmd("State.destroy({})".format(self.state1.id))
+            HBNBCommand().onecmd("State.destroy({})".format(self.state2.id))
+            HBNBCommand().onecmd("all")
+            self.assertNotIn("State", f.getvalue())
+
+    def test_zCity_Destroy(self):
+        """Tests City.destroy()"""
+        with patch('sys.stdout', new=StringIO()) as f:
+            HBNBCommand().onecmd("City.destroy({})".format(self.city1.id))
+            HBNBCommand().onecmd("City.destroy({})".format(self.city2.id))
+            HBNBCommand().onecmd("all")
+            self.assertNotIn("City", f.getvalue())
+
+    def test_zAmenity_Destroy(self):
+        """Tests Amenity.destroy()"""
+        with patch('sys.stdout', new=StringIO()) as f:
+            HBNBCommand().onecmd("Amenity.destroy({})".format(self.amenity1.id))
+            HBNBCommand().onecmd("Amenity.destroy({})".format(self.amenity2.id))
+            HBNBCommand().onecmd("all")
+            self.assertNotIn("Amenity", f.getvalue())
+
+    def test_zPlace_Destroy(self):
+        """Tests Place.destroy()"""
+        with patch('sys.stdout', new=StringIO()) as f:
+            HBNBCommand().onecmd("Place.destroy({})".format(self.place1.id))
+            HBNBCommand().onecmd("Place.destroy({})".format(self.place2.id))
+            HBNBCommand().onecmd("all")
+            self.assertNotIn("Place", f.getvalue())
 
 
 if __name__ == "__main__":
