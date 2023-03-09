@@ -326,6 +326,48 @@ class TestConsoleMethodsWithArgs(unittest.TestCase):
             self.assertNotIn("{}".format(self.user1), f.getvalue())
 
     # Tests for the count method
+    def test_BaseModel_Count(self):
+        """Tests BaseModel.count()"""
+        with patch('sys.stdout', new=StringIO()) as f:
+            HBNBCommand().onecmd("BaseModel.count()")
+            self.assertIn("2", f.getvalue())
+
+    def test_User_Count(self):
+        """Tests User.count()"""
+        with patch('sys.stdout', new=StringIO()) as f:
+            HBNBCommand().onecmd("User.count()")
+            self.assertIn("2", f.getvalue())
+
+    def test_Review_Count(self):
+        """Tests Review.count()"""
+        with patch('sys.stdout', new=StringIO()) as f:
+            HBNBCommand().onecmd("Review.count()")
+            self.assertIn("2", f.getvalue())
+
+    def test_State_Count(self):
+        """Tests State.count()"""
+        with patch('sys.stdout', new=StringIO()) as f:
+            HBNBCommand().onecmd("State.count()")
+            self.assertIn("2", f.getvalue())
+
+    def test_City_Count(self):
+        """Tests City.count()"""
+        with patch('sys.stdout', new=StringIO()) as f:
+            HBNBCommand().onecmd("City.count()")
+            self.assertIn("2", f.getvalue())
+
+    def test_Amenity_Count(self):
+        """Tests Amenity.count()"""
+        with patch('sys.stdout', new=StringIO()) as f:
+            HBNBCommand().onecmd("Amenity.count()")
+            self.assertIn("2", f.getvalue())
+
+    def test_Place_Count(self):
+        """Tests Place.count()"""
+        with patch('sys.stdout', new=StringIO()) as f:
+            HBNBCommand().onecmd("Place.count()")
+            self.assertIn("2", f.getvalue())
+
     # Tests for the destroy method
     # Tests for the update method
 
