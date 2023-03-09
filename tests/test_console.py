@@ -28,7 +28,6 @@ class TestConsole(unittest.TestCase):
             pass
         FileStorage._FileStorage__objects = {}
 
-
     def tearDown(self):
         try:
             os.remove("file.json")
@@ -73,7 +72,8 @@ class TestConsole(unittest.TestCase):
         """ Test: handles unknown commands """
         with patch('sys.stdout', new=StringIO()) as f:
             HBNBCommand().onecmd("Print me!")
-            self.assertEqual(f.getvalue().strip(), "*** Unknown syntax: Print me!")
+            self.assertEqual(f.getvalue().strip(),
+                             "*** Unknown syntax: Print me!")
 
     # ==== Specific tests for the Create method ====
 
@@ -232,7 +232,8 @@ class TestConsoleMethodsWithArgs(unittest.TestCase):
             pass
         FileStorage._FileStorage__objects = {}
 
-        # Create two BaseModel, User, Review, State, City, Amenity, Place instances each
+        # Create two BaseModel, User, Review, State, City,
+        # -> Amenity, Place instances each
         cls.base1 = BaseModel()
         cls.base2 = BaseModel()
         cls.user1 = User()
@@ -478,8 +479,8 @@ class TestConsoleMethodsWithArgs(unittest.TestCase):
     def test_Review_Update(self):
         """Tests Review.update()"""
         with patch('sys.stdout', new=StringIO()) as f:
-            HBNBCommand().onecmd("Review.update({}, text, \"I love this place\")"
-                                 .format(self.review1.id))
+            HBNBCommand().onecmd("Review.update({}, text, \"{}\")".format
+                                 (self.review1.id, "I love this place"))
             HBNBCommand().onecmd("Review.show({})".format(self.review1.id))
             self.assertIn("I love this place", f.getvalue())
             self.assertIn("text", f.getvalue())
@@ -526,7 +527,7 @@ class TestConsoleMethodsWithArgs(unittest.TestCase):
             self.assertNotIn("My Apartment", f.getvalue())
 
     # Tests for the destroy method
-    # N.B:: The destroy method starts with a 'z' to ensure it runs last
+    # N.B:: The destroy test methods start with a 'z' to ensure it runs last
     def test_zBaseModel_Destroy(self):
         """Tests BaseModel.destroy()"""
         with patch('sys.stdout', new=StringIO()) as f:
@@ -570,8 +571,10 @@ class TestConsoleMethodsWithArgs(unittest.TestCase):
     def test_zAmenity_Destroy(self):
         """Tests Amenity.destroy()"""
         with patch('sys.stdout', new=StringIO()) as f:
-            HBNBCommand().onecmd("Amenity.destroy({})".format(self.amenity1.id))
-            HBNBCommand().onecmd("Amenity.destroy({})".format(self.amenity2.id))
+            HBNBCommand().onecmd("Amenity.destroy({})"
+                                 .format(self.amenity1.id))
+            HBNBCommand().onecmd("Amenity.destroy({})"
+                                 .format(self.amenity2.id))
             HBNBCommand().onecmd("all")
             self.assertNotIn("Amenity", f.getvalue())
 
